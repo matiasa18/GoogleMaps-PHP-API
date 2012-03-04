@@ -1,0 +1,20 @@
+    $address = $mb -> getPost('address');
+    
+    // Limpiamos dobles espacios
+    $address = preg_replace('/[ ]+/', ' ', $address);
+    
+    // Reemplazamos los espacios por + para la url.
+    $address = str_replace(' ', '+', $address);
+    
+    // Mandamos la request.
+    $geocode = file_get_contents('http://maps.google.com/maps/api/geocode/json?address='.$address.'&sensor=false');
+    
+    // Handleamos la data
+    $geocode = json_decode($geocode);
+    
+    // Agregar mas validadores...
+    $arr = array();
+    $arr ['lat'] = $geocode->results[0]->geometry->location->lat;
+    $arr ['lng'] = $geocode->results[0]->geometry->location->lng;
+    echo json_encode($arr);
+    die();

@@ -13,6 +13,16 @@ $map    ->  setCenter (array(
 
 $map    ->  setZoom ( 5 );
 
+// We create the new marker
+$marker = new marker ( 'Marker 1' , 15.03333, -89.1102000 );
+
+// We load the marker to the map
+$map    ->  addMarker ( $marker );
+
+// Adding it "Dynamically"
+$map    ->  addMarker ( new marker ( 'Marker 2', 13.0000, -87 ) );
+
+
 ?>
 <html>
     

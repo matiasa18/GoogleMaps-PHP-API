@@ -68,25 +68,53 @@ class GoogleMap {
         }
         
         // Start by loading the maps thingy.
-        $loads      .=      '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=' . $this -> key . '&sensor=' . $this -> sensor . '"></script>';
+        $loads              .=      '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=' . $this -> key . '&sensor=' . $this -> sensor . '"></script>';
         
-        $loads      .=      '<script type="text/javascript">';
-        $loads      .=          'var map;';
-        $loads      .=          '$(document).ready(function() {';
-        $loads      .=              'var myOptions = {';
-        $loads      .=                  'zoom:      ' . $this -> zoom . ',';
-        $loads      .=                  'center: new google.maps.LatLng(' . $this -> latLng ['lat'] . ', ' . $this -> latLng ['lng'] . '),';
-        $loads      .=                  'mapTypeId: google.maps.MapTypeId.' . $this -> map_id . ''; // More options coming soon.
-        $loads      .=              '};';
-        $loads      .=              'map = new google.maps.Map(document.getElementById("' . $this -> canvas_id . '"), myOptions);';
-        $loads      .=          '});';
-        $loads      .=       '</script>';        
+        $loads              .=      '<script type="text/javascript">';
+        $loads              .=          'var markersArray = [];';
+        $loads              .=          'var map;';
+        $loads              .=          '$(document).ready(function() {';
+        $loads              .=              'var myOptions = {';
+        $loads              .=                  'zoom:      ' . $this -> zoom . ',';
+        $loads              .=                  'center: new google.maps.LatLng(' . $this -> latLng ['lat'] . ', ' . $this -> latLng ['lng'] . '),';
+        $loads              .=                  'mapTypeId: google.maps.MapTypeId.' . $this -> map_id . ''; // More options coming soon.
+        $loads              .=              '};';
+        $loads              .=              'map = new google.maps.Map(document.getElementById("' . $this -> canvas_id . '"), myOptions);';
+        
+        
+        // Now load the markers.
+        if ( is_array ( $this -> markers ) && !empty ( $this -> markers ) ) {
+            foreach ( $this -> markers as $m ) {
+                $loads      .=              'var marker = new google.maps.Marker({';
+                $loads      .=                  'position: new google.maps.LatLng(' . $m -> getLat() . ', ' . $m -> getLng() . '),';
+                if ( $m -> getTitle () ) {
+                    $loads  .=                  'title: "' . $m -> getTitle() . '"';
+                }
+                $loads      .=              '});';
+                $loads      .=              'markersArray.push(marker);';
+            }
+        }
+        
+        $loads              .=              'if (markersArray) {';
+        $loads              .=                  'for ( i in markersArray ) {';
+        $loads              .=                      'markersArray[i].setMap(map);';
+        $loads              .=                  '}';
+        $loads              .=              '}';
+        
+        
+        $loads              .=          '});';
+        $loads              .=       '</script>';        
         
         // Now we check our markers.
         
         // Nevermind, we will do that tomorrow.
         
         return $loads;
+    }
+    
+    // Adds a marker (object) to the array.
+    public function addMarker ( $marker ) {
+        $this -> markers [] = $marker;
     }
     
     public function getGeoIPinfo ( ) {
