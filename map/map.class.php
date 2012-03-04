@@ -37,6 +37,18 @@ class GoogleMap {
     // Boolean to see if the map must print a searchbox
     private $searchbox = false;
     
+    // Active geoIP so it will try to center the map on the city or country that the user is from.
+    private $geoip = true;
+    
+    // Center latitude and longitude.
+    private $latLng = array (
+                                'lat' => 15.03368414836334,
+                                'lng' => -89.62204450000002
+                            );
+    
+    // Markers array
+    private $markers = array();
+    
     public function GoogleMap ($key, $width, $height, $canvas_id) {
         
         // More things will be here, probably.
@@ -51,15 +63,19 @@ class GoogleMap {
     public function printHead ( ) {
         $loads      =       '';
         
+        if ( $this -> geoip ) {
+            $this -> getGeoIPinfo();
+        }
+        
         // Start by loading the maps thingy.
-        $loads      .=      '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=' . $this -> key . '&sensor=' . (string) $this -> sensor . '"></script>';
+        $loads      .=      '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=' . $this -> key . '&sensor=' . $this -> sensor . '"></script>';
         
         $loads      .=      '<script type="text/javascript">';
         $loads      .=          'var map;';
         $loads      .=          '$(document).ready(function() {';
-        $loads      .=              'var myOptions = {'; // Center will be added soon with GeoLocation options.
+        $loads      .=              'var myOptions = {';
         $loads      .=                  'zoom:      ' . $this -> zoom . ',';
-        $loads      .=                  'center: new google.maps.LatLng(15.03368414836334, -89.62204450000002),';
+        $loads      .=                  'center: new google.maps.LatLng(' . $this -> latLng ['lat'] . ', ' . $this -> latLng ['lng'] . '),';
         $loads      .=                  'mapTypeId: google.maps.MapTypeId.' . $this -> map_id . ''; // More options coming soon.
         $loads      .=              '};';
         $loads      .=              'map = new google.maps.Map(document.getElementById("' . $this -> canvas_id . '"), myOptions);';
@@ -71,6 +87,10 @@ class GoogleMap {
         // Nevermind, we will do that tomorrow.
         
         return $loads;
+    }
+    
+    public function getGeoIPinfo ( ) {
+        // @TODO Implement GeoIP part
     }
     
     // Must be done on the <body> html part, will print the map canvas
@@ -106,6 +126,17 @@ class GoogleMap {
         $this -> zoom           = $this -> setInteger ( $newVal );
     }
     
+    public function setGeoip ( $newVal ) {
+        $this -> geoip          = $this -> setBoolean ( $newVal );
+    }
+    
+    /**
+     *
+     * @param array $newVal Must have lat and lng indexes
+     */
+    public function setCenter ( $newVal ) {
+        $this -> latLng         = $newVal;
+    }
     
     private function setInteger ( $newVal ) {
         $newVal = intval ($newVal);
