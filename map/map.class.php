@@ -10,6 +10,9 @@
  * contact: www.matiasbonifacino.com
  */
 
+
+// Testing the hooks :o
+
 class GoogleMap {
     // The default zoom our map will have.
     private $zoom = 15;
