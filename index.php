@@ -3,7 +3,7 @@
 // Require map core.
 require_once ('map/map.core.php');
 
-$map    =   new GoogleMap ( 'AIzaSyCbvf_Q2X4XhMplEyjlE_KpYeL9T2oEpDo', 500, 500, 'map-canvas' );
+$map    =   new Map ( 'AIzaSyCbvf_Q2X4XhMplEyjlE_KpYeL9T2oEpDo', 500, 500, 'map-canvas' );
 
 // Set the center (Latitude and Longitude)
 $map    ->  setCenter (array(
